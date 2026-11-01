@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="box">
+            <h4>Add New Quiz</h4>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Course:</label>
+                    {{ form.course }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Part (Midterm or Final):</label>
+                    {{ form.term }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Quiz Title:</label>
+                    {{ form.title }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Instructions:</label>
+                    {{ form.instructions }}
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Total Marks:</label>
+                        {{ form.total_marks }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Time (Minutes):</label>
+                        {{ form.duration_minutes }}
+                    </div>
+                </div>
+                <div class="mb-3 form-check">
+                    {{ form.is_published }}
+                    <label class="form-check-label" for="{{ form.is_published.id_for_label }}">Active</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save Quiz & Add Questions</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

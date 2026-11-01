@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="box text-center">
+            <h2 class="mb-3">University Exam & Viva System</h2>
+            <p class="text-muted">
+                This is a semester project where students and teachers can login.<br>
+                Students take quizzes and upload video for viva.<br>
+                Teachers check the quiz and video viva to give marks for <b>Midterm</b> and <b>Final</b>.
+            </p>
+            <div class="mt-4">
+                <a href="{% url 'login' %}" class="btn btn-primary px-4 me-2">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary px-4">Register</a>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="text-start">
+                <h6><b>Demo Accounts:</b></h6>
+                <ul class="mb-0">
+                    <li><b>Teacher:</b> username: <code>teacher</code> | password: <code>pass123</code></li>
+                    <li><b>Student 1:</b> username: <code>student1</code> | password: <code>pass123</code></li>
+                    <li><b>Student 2:</b> username: <code>student2</code> | password: <code>pass123</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

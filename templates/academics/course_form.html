@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="box">
+            <h4>{% if course %}Edit Course{% else %}Add New Course{% endif %}</h4>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Course Code:</label>
+                    {{ form.code }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Course Title:</label>
+                    {{ form.title }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Semester:</label>
+                    {{ form.semester }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description:</label>
+                    {{ form.description }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Select Students to Enroll:</label>
+                    {{ form.students }}
+                    <small class="text-muted">Hold Ctrl to select multiple students.</small>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save Course</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

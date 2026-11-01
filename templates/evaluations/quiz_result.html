@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="box text-center">
+            <h4>Quiz Submitted!</h4>
+            <p class="text-muted">{{ quiz.title }} ({{ quiz.course.code }})</p>
+
+            <div class="p-3 my-3 bg-light border rounded">
+                <h5>Your Mark: <b>{{ submission.obtained_marks }}</b> / {{ quiz.total_marks }}</h5>
+                {% if submission.is_graded %}
+                    <span class="badge bg-success">Graded</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">Teacher will check descriptive answer</span>
+                {% endif %}
+            </div>
+
+            {% if submission.teacher_feedback %}
+                <p class="text-muted small"><b>Teacher Feedback:</b> {{ submission.teacher_feedback }}</p>
+            {% endif %}
+
+            <a href="{% url 'student_dashboard' %}" class="btn btn-primary mt-2">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3>{{ course.code }} - Mark Sheet</h3>
+        <p class="text-muted mb-0">Semester: {{ course.semester.name }}</p>
+    </div>
+    <div>
+        <button class="btn btn-outline-dark btn-sm" onclick="window.print()">Print</button>
+        <a href="{% url 'teacher_course_detail' course.id %}" class="btn btn-secondary btn-sm">Back</a>
+    </div>
+</div>
+
+<div class="box">
+    <table class="table table-bordered table-sm text-center">
+        <thead class="table-light">
+            <tr>
+                <th rowspan="2" class="align-middle text-start">Student</th>
+                <th colspan="3" class="table-primary">Midterm</th>
+                <th colspan="3" class="table-info">Final</th>
+                <th rowspan="2" class="align-middle">Total Mark</th>
+                <th rowspan="2" class="align-middle">Grade</th>
+            </tr>
+            <tr class="small">
+                <th>Quiz</th>
+                <th>Viva</th>
+                <th><b>Mid Total</b></th>
+                <th>Quiz</th>
+                <th>Viva</th>
+                <th><b>Final Total</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rec in student_records %}
+            <tr>
+                <td class="text-start">
+                    <b>{{ rec.student.username }}</b> ({{ rec.student.university_id }})
+                </td>
+                <td>{{ rec.mid_q_obtained }}</td>
+                <td>{{ rec.mid_v_obtained }}</td>
+                <td class="table-primary"><b>{{ rec.mid_total }}</b></td>
+
+                <td>{{ rec.fin_q_obtained }}</td>
+                <td>{{ rec.fin_v_obtained }}</td>
+                <td class="table-info"><b>{{ rec.fin_total }}</b></td>
+
+                <td><b>{{ rec.total_obtained }}</b> / {{ rec.grand_total }}</td>
+                <td><span class="badge bg-dark">{{ rec.grade }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="9" class="text-muted">No students enrolled.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

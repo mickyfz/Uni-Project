@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Watch Video & Give Mark for Viva</h4>
+    <a href="{% url 'viva_submissions_list' submission.viva.id %}" class="btn btn-secondary btn-sm">Back</a>
+</div>
+
+<div class="row">
+    <!-- Video Player -->
+    <div class="col-md-7">
+        <div class="box">
+            <h6>Student: <b>{{ submission.student.username }}</b> (ID: {{ submission.student.university_id }})</h6>
+            <p class="text-muted small mb-2">Viva: {{ submission.viva.title }} (Part: {{ submission.viva.get_term_display }})</p>
+
+            <div class="mb-3 bg-black text-center p-2 rounded">
+                {% if submission.video_file %}
+                    <video controls class="w-100" style="max-height: 400px;">
+                        <source src="{{ submission.video_file.url }}" type="video/mp4">
+                        <source src="{{ submission.video_file.url }}" type="video/webm">
+                        Your browser does not support the video tag.
+                    </video>
+                {% else %}
+                    <p class="text-white my-4">No video file uploaded.</p>
+                {% endif %}
+            </div>
+
+            {% if submission.notes %}
+                <div class="p-2 bg-light border rounded">
+                    <small><b>Student Notes:</b> {{ submission.notes }}</small>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Give Mark Box -->
+    <div class="col-md-5">
+        <div class="box">
+            <h5>Give Mark</h5>
+            <p class="text-muted small">Total viva mark: <b>{{ submission.viva.total_marks }}</b></p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label"><b>Mark:</b></label>
+                    {{ form.obtained_marks }}
+                    <small class="text-muted">Enter mark out of {{ submission.viva.total_marks }}</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Teacher Feedback:</label>
+                    {{ form.teacher_feedback }}
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Save Mark</button>
+            </form>
+
+            {% if submission.is_graded %}
+                <div class="alert alert-success mt-3 py-2 small">
+                    Already graded: <b>{{ submission.obtained_marks }} / {{ submission.viva.total_marks }}</b>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

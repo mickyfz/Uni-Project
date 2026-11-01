@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h4>Quiz Questions: {{ quiz.title }}</h4>
+        <small class="text-muted">Part: {{ quiz.get_term_display }} | Course: {{ quiz.course.code }}</small>
+    </div>
+    <a href="{% url 'teacher_course_detail' quiz.course.id %}" class="btn btn-secondary btn-sm">Done</a>
+</div>
+
+<div class="row">
+    <!-- Question List -->
+    <div class="col-md-7">
+        <div class="box">
+            <h6>Questions ({{ questions.count }}):</h6>
+            {% for q in questions %}
+            <div class="border p-2 mb-2 rounded bg-light">
+                <div class="d-flex justify-content-between">
+                    <b>Q{{ forloop.counter }}: {{ q.question_text }}</b>
+                    <form method="post" class="d-inline" onsubmit="return confirm('Delete?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete_question" value="1">
+                        <input type="hidden" name="question_id" value="{{ q.id }}">
+                        <button type="submit" class="btn btn-sm btn-danger py-0 px-2">Delete</button>
+                    </form>
+                </div>
+                <small class="text-muted">Type: {{ q.get_question_type_display }} | Mark: {{ q.marks }}</small>
+
+                {% if q.question_type == 'mcq' %}
+                <ul class="mb-0 mt-1 small">
+                    {% for c in q.choices.all %}
+                    <li {% if c.is_correct %}class="text-success fw-bold"{% endif %}>
+                        {{ c.choice_text }} {% if c.is_correct %}(Correct Answer){% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p class="text-muted small">No questions yet. Add one from right.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Add Question -->
+    <div class="col-md-5">
+        <div class="box">
+            <h6>Add Question:</h6>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="add_question" value="1">
+
+                <div class="mb-2">
+                    <label class="form-label small">Question Type:</label>
+                    <select name="question_type" id="qType" class="form-select form-select-sm" onchange="checkType()">
+                        <option value="mcq">MCQ (Multiple Choice)</option>
+                        <option value="short_answer">Short Answer</option>
+                    </select>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small">Question Text:</label>
+                    <textarea name="question_text" class="form-control form-control-sm" rows="2" required></textarea>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small">Marks:</label>
+                    <input type="number" name="marks" class="form-control form-control-sm" value="5" required>
+                </div>
+
+                <!-- MCQ Options -->
+                <div id="mcqDiv" class="p-2 border rounded mb-2 bg-light">
+                    <small><b>Options (Select radio for correct one):</b></small>
+                    <div class="input-group input-group-sm mb-1 mt-1">
+                        <span class="input-group-text"><input type="radio" name="correct_choice" value="0" checked></span>
+                        <input type="text" name="choice_text" class="form-control" placeholder="Option A" required>
+                    </div>
+                    <div class="input-group input-group-sm mb-1">
+                        <span class="input-group-text"><input type="radio" name="correct_choice" value="1"></span>
+                        <input type="text" name="choice_text" class="form-control" placeholder="Option B" required>
+                    </div>
+                    <div class="input-group input-group-sm mb-1">
+                        <span class="input-group-text"><input type="radio" name="correct_choice" value="2"></span>
+                        <input type="text" name="choice_text" class="form-control" placeholder="Option C">
+                    </div>
+                    <div class="input-group input-group-sm mb-1">
+                        <span class="input-group-text"><input type="radio" name="correct_choice" value="3"></span>
+                        <input type="text" name="choice_text" class="form-control" placeholder="Option D">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-sm w-100">Add to Quiz</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function checkType() {
+    var val = document.getElementById('qType').value;
+    var div = document.getElementById('mcqDiv');
+    var inputs = div.querySelectorAll('input[type="text"]');
+    if (val === 'mcq') {
+        div.style.display = 'block';
+        inputs[0].required = true;
+        inputs[1].required = true;
+    } else {
+        div.style.display = 'none';
+        inputs.forEach(i => i.required = false);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3>{{ course.code }}: {{ course.title }}</h3>
+        <p class="text-muted mb-0">Teacher: {{ course.teacher.username }}</p>
+    </div>
+    <a href="{% url 'student_dashboard' %}" class="btn btn-secondary btn-sm">Back</a>
+</div>
+
+<div class="row">
+    <!-- Midterm -->
+    <div class="col-md-6">
+        <div class="term-box">
+            <h5 class="text-primary">Part 1: Midterm</h5>
+
+            <h6>Quizzes:</h6>
+            <ul class="list-group mb-3">
+                {% for q in mid_quizzes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ q.item.title }}</b> (Mark: {{ q.item.total_marks }})
+                    </div>
+                    <div>
+                        {% if q.sub %}
+                            <span class="badge bg-secondary">Submitted (Mark: {{ q.sub.obtained_marks }})</span>
+                        {% else %}
+                            <a href="{% url 'take_quiz' q.item.id %}" class="btn btn-primary btn-sm">Take Quiz</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted small">No Midterm quiz.</li>
+                {% endfor %}
+            </ul>
+
+            <h6>Viva:</h6>
+            <ul class="list-group">
+                {% for v in mid_vivas %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ v.item.title }}</b> (Mark: {{ v.item.total_marks }})
+                    </div>
+                    <div>
+                        {% if v.sub %}
+                            <span class="badge bg-secondary">Uploaded (Mark: {{ v.sub.obtained_marks }})</span>
+                            <a href="{% url 'submit_viva' v.item.id %}" class="btn btn-outline-secondary btn-sm ms-1">View</a>
+                        {% else %}
+                            <a href="{% url 'submit_viva' v.item.id %}" class="btn btn-success btn-sm">Upload Video</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted small">No Midterm viva.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Final -->
+    <div class="col-md-6">
+        <div class="term-box" style="border-color: #e2d9f3;">
+            <h5 style="color: #6f42c1;">Part 2: Final Term</h5>
+
+            <h6>Quizzes:</h6>
+            <ul class="list-group mb-3">
+                {% for q in fin_quizzes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ q.item.title }}</b> (Mark: {{ q.item.total_marks }})
+                    </div>
+                    <div>
+                        {% if q.sub %}
+                            <span class="badge bg-secondary">Submitted (Mark: {{ q.sub.obtained_marks }})</span>
+                        {% else %}
+                            <a href="{% url 'take_quiz' q.item.id %}" class="btn btn-primary btn-sm">Take Quiz</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted small">No Final quiz.</li>
+                {% endfor %}
+            </ul>
+
+            <h6>Viva:</h6>
+            <ul class="list-group">
+                {% for v in fin_vivas %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ v.item.title }}</b> (Mark: {{ v.item.total_marks }})
+                    </div>
+                    <div>
+                        {% if v.sub %}
+                            <span class="badge bg-secondary">Uploaded (Mark: {{ v.sub.obtained_marks }})</span>
+                            <a href="{% url 'submit_viva' v.item.id %}" class="btn btn-outline-secondary btn-sm ms-1">View</a>
+                        {% else %}
+                            <a href="{% url 'submit_viva' v.item.id %}" class="btn btn-success btn-sm">Upload Video</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted small">No Final viva.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

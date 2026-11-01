@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3>My Marks Sheet</h3>
+        <p class="text-muted mb-0">Student: {{ user.username }} ({{ user.university_id }})</p>
+    </div>
+    <div>
+        <button class="btn btn-outline-dark btn-sm" onclick="window.print()">Print</button>
+        <a href="{% url 'student_dashboard' %}" class="btn btn-secondary btn-sm">Back</a>
+    </div>
+</div>
+
+<div class="box">
+    <table class="table table-bordered table-sm text-center">
+        <thead class="table-light">
+            <tr>
+                <th rowspan="2" class="align-middle text-start">Course</th>
+                <th colspan="3" class="table-primary">Midterm</th>
+                <th colspan="3" class="table-info">Final</th>
+                <th rowspan="2" class="align-middle">Total Mark</th>
+            </tr>
+            <tr class="small">
+                <th>Quiz</th>
+                <th>Viva</th>
+                <th><b>Mid Total</b></th>
+                <th>Quiz</th>
+                <th>Viva</th>
+                <th><b>Final Total</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rep in reports %}
+            <tr>
+                <td class="text-start">
+                    <b>{{ rep.course.code }}</b> - {{ rep.course.title }}
+                </td>
+                <td>{{ rep.mid_q_obtained }}</td>
+                <td>{{ rep.mid_v_obtained }}</td>
+                <td class="table-primary"><b>{{ rep.mid_total }}</b></td>
+
+                <td>{{ rep.fin_q_obtained }}</td>
+                <td>{{ rep.fin_v_obtained }}</td>
+                <td class="table-info"><b>{{ rep.fin_total }}</b></td>
+
+                <td><b>{{ rep.total_obtained }}</b> / {{ rep.grand_total }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" class="text-muted">No course enrolled.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

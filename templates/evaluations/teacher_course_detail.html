@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3>{{ course.code }}: {{ course.title }}</h3>
+        <p class="text-muted mb-0">{{ course.semester.name }}</p>
+    </div>
+    <div>
+        <a href="{% url 'course_grade_sheet' course.id %}" class="btn btn-dark btn-sm">Full Mark Sheet</a>
+        <a href="{% url 'teacher_dashboard' %}" class="btn btn-secondary btn-sm">Back</a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Midterm -->
+    <div class="col-md-6">
+        <div class="term-box">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="text-primary mb-0">Part 1: Midterm</h5>
+                <div>
+                    <a href="{% url 'course_create_quiz' course.id %}?term=midterm" class="btn btn-sm btn-outline-primary">+ Quiz</a>
+                    <a href="{% url 'course_create_viva' course.id %}?term=midterm" class="btn btn-sm btn-outline-success">+ Viva</a>
+                </div>
+            </div>
+
+            <h6>Quizzes:</h6>
+            <ul class="list-group mb-3">
+                {% for q in midterm_quizzes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ q.title }}</b> (Total Mark: {{ q.total_marks }})
+                    </div>
+                    <div>
+                        <a href="{% url 'quiz_manage_questions' q.id %}" class="btn btn-sm btn-outline-secondary">Questions</a>
+                        <a href="{% url 'quiz_submissions_list' q.id %}" class="btn btn-sm btn-primary">Submissions ({{ q.submissions.count }})</a>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted small">No Midterm quizzes.</li>
+                {% endfor %}
+            </ul>
+
+            <h6>Viva:</h6>
+            <ul class="list-group">
+                {% for v in midterm_vivas %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ v.title }}</b> (Mark: {{ v.total_marks }})
+                    </div>
+                    <a href="{% url 'viva_submissions_list' v.id %}" class="btn btn-sm btn-success">Video Submissions ({{ v.submissions.count }})</a>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted small">No Midterm vivas.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Final -->
+    <div class="col-md-6">
+        <div class="term-box" style="border-color: #e2d9f3;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="text-purple mb-0" style="color: #6f42c1;">Part 2: Final Term</h5>
+                <div>
+                    <a href="{% url 'course_create_quiz' course.id %}?term=final" class="btn btn-sm btn-outline-primary">+ Quiz</a>
+                    <a href="{% url 'course_create_viva' course.id %}?term=final" class="btn btn-sm btn-outline-success">+ Viva</a>
+                </div>
+            </div>
+
+            <h6>Quizzes:</h6>
+            <ul class="list-group mb-3">
+                {% for q in final_quizzes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ q.title }}</b> (Total Mark: {{ q.total_marks }})
+                    </div>
+                    <div>
+                        <a href="{% url 'quiz_manage_questions' q.id %}" class="btn btn-sm btn-outline-secondary">Questions</a>
+                        <a href="{% url 'quiz_submissions_list' q.id %}" class="btn btn-sm btn-primary">Submissions ({{ q.submissions.count }})</a>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted small">No Final quizzes.</li>
+                {% endfor %}
+            </ul>
+
+            <h6>Viva:</h6>
+            <ul class="list-group">
+                {% for v in final_vivas %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ v.title }}</b> (Mark: {{ v.total_marks }})
+                    </div>
+                    <a href="{% url 'viva_submissions_list' v.id %}" class="btn btn-sm btn-success">Video Submissions ({{ v.submissions.count }})</a>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted small">No Final vivas.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="box mt-3">
+    <h6>Enrolled Students ({{ students.count }})</h6>
+    <table class="table table-sm table-bordered mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in students %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ s.university_id }}</td>
+                <td>{{ s.username }}</td>
+                <td>{{ s.email }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted">No students enrolled.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

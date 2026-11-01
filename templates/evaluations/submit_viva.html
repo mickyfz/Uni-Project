@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="box">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>{{ viva.title }}</h4>
+                <a href="{% url 'student_dashboard' %}" class="btn btn-secondary btn-sm">Back</a>
+            </div>
+            <p class="text-muted small">Course: {{ viva.course.code }} | Part: {{ viva.get_term_display }} | Total Marks: {{ viva.total_marks }}</p>
+
+            <div class="alert alert-light border p-2 mb-3">
+                <small><b>Viva Topic / Questions:</b><br>{{ viva.description }}</small>
+            </div>
+
+            {% if existing_sub %}
+                <div class="border p-3 mb-3 rounded bg-light">
+                    <h6><b>Your Submitted Video:</b></h6>
+                    {% if existing_sub.video_file %}
+                    <video controls class="w-100 bg-black rounded" style="max-height: 350px;">
+                        <source src="{{ existing_sub.video_file.url }}" type="video/mp4">
+                        <source src="{{ existing_sub.video_file.url }}" type="video/webm">
+                        Your browser does not support the video tag.
+                    </video>
+                    {% endif %}
+
+                    <div class="mt-2">
+                        <b>Status:</b>
+                        {% if existing_sub.is_graded %}
+                            <span class="badge bg-success">Mark Given: {{ existing_sub.obtained_marks }} / {{ viva.total_marks }}</span>
+                            {% if existing_sub.teacher_feedback %}
+                                <div class="mt-1 small"><b>Teacher Feedback:</b> {{ existing_sub.teacher_feedback }}</div>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Teacher has not given mark yet</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if not existing_sub or not existing_sub.is_graded %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label"><b>Select Video for Viva:</b></label>
+                    {{ form.video_file }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Any note for teacher (optional):</label>
+                    {{ form.notes }}
+                </div>
+                <button type="submit" class="btn btn-success w-100">Upload Video</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

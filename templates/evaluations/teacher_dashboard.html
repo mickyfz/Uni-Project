@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Teacher Dashboard</h3>
+    <div>
+        <a href="{% url 'create_course' %}" class="btn btn-outline-primary btn-sm">+ Add Course</a>
+        <a href="{% url 'create_quiz' %}" class="btn btn-primary btn-sm">+ Add Quiz</a>
+        <a href="{% url 'create_viva' %}" class="btn btn-success btn-sm">+ Add Viva</a>
+    </div>
+</div>
+
+<!-- Pending Submissions to Grade -->
+{% if pending_vivas or pending_quizzes %}
+<div class="box border-warning">
+    <h5 class="text-danger">⚠️ Submissions Waiting for Marks</h5>
+    <table class="table table-bordered table-sm mt-2">
+        <thead class="table-light">
+            <tr>
+                <th>Type</th>
+                <th>Student</th>
+                <th>Item</th>
+                <th>Part</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sub in pending_vivas %}
+            <tr>
+                <td><span class="badge bg-danger">Video Viva</span></td>
+                <td>{{ sub.student.username }} ({{ sub.student.university_id }})</td>
+                <td>{{ sub.viva.title }}</td>
+                <td>{{ sub.viva.get_term_display }}</td>
+                <td>
+                    <a href="{% url 'grade_viva_submission' sub.id %}" class="btn btn-sm btn-success">Watch Video & Give Mark</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+            {% for sub in pending_quizzes %}
+            <tr>
+                <td><span class="badge bg-primary">Quiz</span></td>
+                <td>{{ sub.student.username }} ({{ sub.student.university_id }})</td>
+                <td>{{ sub.quiz.title }}</td>
+                <td>{{ sub.quiz.get_term_display }}</td>
+                <td>
+                    <a href="{% url 'grade_quiz_submission' sub.id %}" class="btn btn-sm btn-primary">Check & Give Mark</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- Courses -->
+<div class="box">
+    <h5>My Courses</h5>
+    {% if courses %}
+        <div class="row">
+            {% for course in courses %}
+            <div class="col-md-6 mb-3">
+                <div class="card p-3 h-100">
+                    <div class="d-flex justify-content-between">
+                        <h5><b>{{ course.code }}</b>: {{ course.title }}</h5>
+                        <small class="text-muted">{{ course.semester.name }}</small>
+                    </div>
+                    <p class="small text-muted mb-2">Students: {{ course.students.count }}</p>
+
+                    <div class="mt-auto d-flex gap-2">
+                        <a href="{% url 'teacher_course_detail' course.id %}" class="btn btn-outline-primary btn-sm">Manage Mid & Final</a>
+                        <a href="{% url 'course_grade_sheet' course.id %}" class="btn btn-dark btn-sm">View Mark Sheet</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No courses yet. Click "+ Add Course" to add one.</p>
+    {% endif %}
+</div>
+{% endblock %}
